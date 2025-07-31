@@ -4,143 +4,113 @@
     <meta charset="UTF-8" />
     <title>Cryptidium</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="https://cryptidium.vercel.app/Assets/favicon.ico" type="image/x-icon" />
 
     <style>
-      /* ---------- Reset ---------- */
-      * {
-        box-sizing: border-box;
+      *{box-sizing:border-box}
+      body{
+        margin:0;
+        font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+        display:flex;
+        flex-direction:column;
+        min-height:100vh;
+        background:url("https://cryptidium.vercel.app/Assets/background.png") center/cover no-repeat fixed;
+        color:#fff;
       }
-
-      body {
-        margin: 0;
-        font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
-          Arial, sans-serif;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-        background: #fafafa;
+      .nav{
+        display:flex;
+        align-items:center;
+        height:60px;
+        padding:0 1rem;
+        background:#111;
+        color:#fff;
+        gap:0.5rem;
       }
-
-      /* ---------- Top navigation bar ---------- */
-      .nav {
-        display: flex;
-        align-items: center;
-        height: 60px;
-        padding: 0 1rem;
-        background: #111;
-        color: #fff;
-        gap: 0.5rem;
+      .nav__logo{height:40px}
+      main{
+        flex:1;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:flex-start;
+        padding-top:3rem;
+        text-align:center;
+        gap:1.5rem;
       }
-
-      .nav__logo {
-        height: 40px;
+      .hero__logo{
+        width:200px;
+        max-width:90vw;
+        height:auto;
       }
-
-      /* ---------- Main hero section ---------- */
-      main {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        padding-top: 3rem;
-        text-align: center;
-        gap: 2rem;
+      .button-row{
+        display:flex;
+        gap:1.5rem;
+        flex-wrap:wrap;
+        justify-content:center;
       }
-
-      .hero__logo {
-        width: 200px;
-        max-width: 90vw;
-        height: auto;
+      .button{
+        display:inline-block;
+        padding:0.75rem 1.75rem;
+        background:#9200f3;
+        color:#fff;
+        text-decoration:none;
+        font-size:1rem;
+        transition:background 0.2s ease;
       }
-
-      /* ---------- Download buttons ---------- */
-      .button-row {
-        display: flex;
-        gap: 1.5rem;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-
-      .button {
-        display: inline-block;
-        padding: 0.75rem 1.75rem;
-        background: #0070f3;
-        color: #fff;
-        border-radius: 6px;
-        text-decoration: none;
-        font-size: 1rem;
-        transition: background 0.2s ease;
-      }
-
-      .button:hover {
-        background: #0056c7;
-      }
-
-      .version {
-        margin-top: 0.25rem;
-        font-size: 0.875rem;
-        color: #666;
+      .button:hover{background:#440092}
+      .version{
+        margin-top:0.25rem;
+        font-size:0.875rem;
+        color:#fff;
+        opacity:0.8;
       }
     </style>
   </head>
   <body>
-    <!-- ---------- Top bar ---------- -->
     <header class="nav">
-      <img class="nav__logo" src="logo.png" alt="Cryptidium logo" />
+      <img class="nav__logo" src="https://cryptidium.vercel.app/Assets/logo.png" alt="Cryptidium logo" />
       <span>Cryptidium</span>
     </header>
 
-    <!-- ---------- Main content ---------- -->
     <main>
-      <img
-        class="hero__logo"
-        src="big-logo.png"
-        alt="Cryptidium large logo"
-      />
+      <img class="hero__logo" src="https://cryptidium.vercel.app/Assets/logo.png" alt="Cryptidium large logo" />
       <h1>Cryptidium</h1>
+      <h3>WebKit based Web Browser for Windows 11</h3>
 
       <div class="button-row">
         <div>
-          <a id="download1" class="button" href="#" download>
-            Download for Platform&nbsp;A
-          </a>
+          <a id="download1" class="button" href="#" download>Download Stable</a>
           <div id="version1" class="version">Loading…</div>
         </div>
-
         <div>
-          <a id="download2" class="button" href="#" download>
-            Download for Platform&nbsp;B
-          </a>
+          <a id="download2" class="button" href="#" download>Download Beta</a>
           <div id="version2" class="version">Loading…</div>
         </div>
       </div>
     </main>
 
     <script>
-      /* URLs – replace with real endpoints */
-      const versionUrl1 = "https://example.com/version1.txt";
-      const versionUrl2 = "https://example.com/version2.txt";
-      const downloadUrl1 = "https://example.com/download1.zip";
-      const downloadUrl2 = "https://example.com/download2.zip";
+      const assetsBase="https://cryptidium.vercel.app/UpdateUtility/";
+      const versionUrl1=assetsBase+"lateststable";
+      const versionUrl2=assetsBase+"latestbetaformatted";
+      const downloadUrl1=assetsBase+"CryptidiumStable.exe";
+      const downloadUrl2=assetsBase+"CryptidiumBeta.exe";
 
-      /* Fetch helpers */
-      async function fetchVersion(url, elementId) {
-        try {
-          const res = await fetch(url, { cache: "no-store" });
-          if (!res.ok) throw new Error("Bad response");
-          const text = await res.text();
-          document.getElementById(elementId).textContent = "v" + text.trim();
-        } catch {
-          document.getElementById(elementId).textContent = "Version unavailable";
+      async function fetchVersion(url,id){
+        try{
+          const res=await fetch(url,{cache:"no-store"});
+          if(!res.ok)throw new Error();
+          const text=await res.text();
+          document.getElementById(id).textContent=text.trim();
+        }catch{
+          document.getElementById(id).textContent="Version unavailable";
         }
       }
 
-      /* Init */
-      document.getElementById("download1").href = downloadUrl1;
-      document.getElementById("download2").href = downloadUrl2;
-      fetchVersion(versionUrl1, "version1");
-      fetchVersion(versionUrl2, "version2");
+      document.getElementById("download1").href=downloadUrl1;
+      document.getElementById("download2").href=downloadUrl2;
+      fetchVersion(versionUrl1,"version1");
+      fetchVersion(versionUrl2,"version2");
     </script>
   </body>
 </html>
