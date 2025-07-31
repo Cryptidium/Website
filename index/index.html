@@ -5,43 +5,50 @@
     <title>Cryptidium</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="https://cryptidium.vercel.app/Assets/favicon.ico" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet" />
 
     <style>
       *{box-sizing:border-box}
       body{
         margin:0;
-        font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+        font-family:'Nunito',system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
         display:flex;
         flex-direction:column;
         min-height:100vh;
+        background-color:#200033;
         background:url("https://cryptidium.vercel.app/Assets/background.png") center/cover no-repeat fixed;
         color:#fff;
       }
       .nav{
+        position:sticky;
+        top:0;
+        z-index:1000;
         display:flex;
         align-items:center;
-        height:60px;
-        padding:0 1rem;
-        background:#111;
-        color:#fff;
-        gap:0.5rem;
+        height:80px;
+        padding:0 1.25rem;
+        background:rgba(17,17,17,0.6);
+        backdrop-filter:blur(8px);
+        gap:0.75rem;
       }
-      .nav__logo{height:40px}
+      .nav__logo{height:52px}
+
       main{
         flex:1;
         display:flex;
         flex-direction:column;
         align-items:center;
-        justify-content:flex-start;
-        padding-top:3rem;
+        justify-content:center;
+        min-height:calc(100vh - 80px);
         text-align:center;
-        gap:1.5rem;
+        gap:1rem;
       }
-      .hero__logo{
-        width:200px;
-        max-width:90vw;
-        height:auto;
-      }
+      h1{font-size:3em;margin:0}
+      h3{font-size:1.5em;margin:0 0 1.5rem}
+      .hero__logo{width:200px;max-width:90vw;height:auto;margin-bottom:1rem}
+
       .button-row{
         display:flex;
         gap:1.5rem;
@@ -55,27 +62,30 @@
         color:#fff;
         text-decoration:none;
         font-size:1rem;
-        transition:background 0.2s ease;
+        transition:background 0.2s ease, box-shadow 0.2s ease;
+        box-shadow:0 4px 10px rgba(0,0,0,0.4);
+
       }
-      .button:hover{background:#440092}
+      .button:hover{background:#440092;box-shadow:0 6px 14px rgba(0,0,0,0.5)}
       .version{
         margin-top:0.25rem;
         font-size:0.875rem;
         color:#fff;
         opacity:0.8;
+        text-align:center;
       }
     </style>
   </head>
   <body>
     <header class="nav">
       <img class="nav__logo" src="https://cryptidium.vercel.app/Assets/logo.png" alt="Cryptidium logo" />
-      <span>Cryptidium</span>
+      <h2>Cryptidium</h2>
     </header>
 
     <main>
       <img class="hero__logo" src="https://cryptidium.vercel.app/Assets/logo.png" alt="Cryptidium large logo" />
-      <h1>Cryptidium</h1>
-      <h3>WebKit based Web Browser for Windows 11</h3>
+      <h1>Designed to be fast</h1>
+      <h3>The first open source WebKit web browser for Windows 11</h3>
 
       <div class="button-row">
         <div>
@@ -86,31 +96,60 @@
           <a id="download2" class="button" href="#" download>Download Beta</a>
           <div id="version2" class="version">Loading…</div>
         </div>
+        <div>
+          <a id="download3" class="button" href="#" download>Download Source</a>
+          <div id="version3" class="version">Loading…</div>
+        </div>
       </div>
     </main>
 
     <script>
-      const assetsBase="https://cryptidium.vercel.app/UpdateUtility/";
-      const versionUrl1=assetsBase+"lateststable";
-      const versionUrl2=assetsBase+"latestbetaformatted";
-      const downloadUrl1=assetsBase+"CryptidiumStable.exe";
-      const downloadUrl2=assetsBase+"CryptidiumBeta.exe";
+      const assetsBase = "https://cryptidium.vercel.app/UpdateUtility/";
+      const versionUrl1 = assetsBase + "lateststable";
+      const versionUrl2 = assetsBase + "latestbetaformatted";
+      const downloadUrl1 = assetsBase + "CryptidiumStable.exe";
+      const downloadUrl2 = assetsBase + "CryptidiumBeta.exe";
 
-      async function fetchVersion(url,id){
-        try{
-          const res=await fetch(url,{cache:"no-store"});
-          if(!res.ok)throw new Error();
-          const text=await res.text();
-          document.getElementById(id).textContent=text.trim();
-        }catch{
-          document.getElementById(id).textContent="Version unavailable";
+      document.getElementById("download1").href = downloadUrl1;
+      document.getElementById("download2").href = downloadUrl2;
+
+      async function fetchText(url, id) {
+        try {
+          const res = await fetch(url, { cache: "no-store" });
+          if (!res.ok) throw new Error();
+          const text = await res.text();
+          document.getElementById(id).textContent = text.trim();
+        } catch {
+          document.getElementById(id).textContent = "Version unavailable";
         }
       }
 
-      document.getElementById("download1").href=downloadUrl1;
-      document.getElementById("download2").href=downloadUrl2;
-      fetchVersion(versionUrl1,"version1");
-      fetchVersion(versionUrl2,"version2");
+      fetchText(versionUrl1, "version1");
+      fetchText(versionUrl2, "version2");
+
+      const repoOwner = "Cryptidium";
+      const repoName = "Cryptidium-Browser";
+      const branch = "main";
+
+      const sourceZipUrl = `https://github.com/${repoOwner}/${repoName}/archive/refs/heads/${branch}.zip`;
+      document.getElementById("download3").href = sourceZipUrl;
+
+      async function fetchLatestCommit(owner, repo) {
+        try {
+          const apiUrl = `https://api.github.com/repos/${owner}/${repo}/commits?per_page=1`;
+          const res = await fetch(apiUrl, { headers: { "Accept": "application/vnd.github.v3+json" } });
+          if (!res.ok) throw new Error();
+          const data = await res.json();
+          const sha = (data[0]?.sha || "").substring(0, 7);
+          return sha ? `commit ${sha}` : "Unknown commit";
+        } catch {
+          return "Commit unavailable";
+        }
+      }
+
+      fetchLatestCommit(repoOwner, repoName).then(label => {
+        document.getElementById("version3").textContent = label;
+      });
     </script>
   </body>
 </html>
