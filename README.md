@@ -1,2 +1,1 @@
-# Website
-The Cryptidium website
+Quite literally the website for Cryptidium
