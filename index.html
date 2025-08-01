@@ -10,69 +10,108 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet" />
 
     <style>
-      *{box-sizing:border-box}
-      body{
-        margin:0;
-        font-family:'Nunito',system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-        display:flex;
-        flex-direction:column;
-        min-height:100vh;
-        background-color:#200033;
-        background:url("https://cryptidium.vercel.app/Assets/background.png") center/cover no-repeat fixed;
-        color:#fff;
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: 'Nunito', system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background-color: #200033;
+        background: url("https://cryptidium.vercel.app/Assets/background.png") center/cover no-repeat fixed;
+        color: #fff;
       }
-      .nav{
-        position:sticky;
-        top:0;
-        z-index:1000;
-        display:flex;
-        align-items:center;
-        height:80px;
-        padding:0 1.25rem;
-        background:rgba(17,17,17,0.6);
-        backdrop-filter:blur(8px);
-        gap:0.75rem;
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        height: 80px;
+        padding: 0 1.25rem;
+        background: rgba(17,17,17,0.6);
+        backdrop-filter: blur(8px);
+        gap: 0.75rem;
       }
-      .nav__logo{height:52px}
-
-      main{
-        flex:1;
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        justify-content:center;
-        min-height:calc(100vh - 80px);
-        text-align:center;
-        gap:1rem;
+      .nav__logo { height: 52px; }
+      main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 80px);
+        text-align: center;
+        gap: 1rem;
       }
-      h1{font-size:3em;margin:0}
-      h3{font-size:1.5em;margin:0 0 1.5rem}
-      .hero__logo{width:200px;max-width:90vw;height:auto;margin-bottom:1rem}
-
-      .button-row{
-        display:flex;
-        gap:1.5rem;
-        flex-wrap:wrap;
-        justify-content:center;
+      h1 { font-size: 3em; margin: 0; }
+      h3 { font-size: 1.5em; margin: 0 0 1.5rem; }
+      .hero__logo { width: 200px; max-width: 90vw; height: auto; margin-bottom: 1rem; }
+      .button-row {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
       }
-      .button{
-        display:inline-block;
-        padding:0.75rem 1.75rem;
-        background:#9200f3;
-        color:#fff;
-        text-decoration:none;
-        font-size:1rem;
-        transition:background 0.2s ease, box-shadow 0.2s ease;
-        box-shadow:0 4px 10px rgba(0,0,0,0.4);
-
+      .button-column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
-      .button:hover{background:#440092;box-shadow:0 6px 14px rgba(0,0,0,0.5)}
-      .version{
-        margin-top:0.25rem;
-        font-size:0.875rem;
-        color:#fff;
-        opacity:0.8;
-        text-align:center;
+      .button {
+        display: inline-block;
+        padding: 0.75rem 1.75rem;
+        background: #9200f3;
+        color: #fff;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: background 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      }
+      .button:hover {
+        background: #440092;
+        box-shadow: 0 6px 14px rgba(0,0,0,0.5);
+      }
+      select.button {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border: none;
+        background: #9200f3;
+        color: #fff;
+        text-decoration: none;
+        font-size: 1rem;
+        padding: 0.75rem 1.75rem;
+        transition: background 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        cursor: pointer;
+      }
+      select.button:hover {
+        background: #440092;
+        box-shadow: 0 6px 14px rgba(0,0,0,0.5);
+      }
+      select#downloadType.button {
+        min-height: 46px;
+        font-family: inherit;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background: #9200f3 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M4.646 6.146a.5.5 0 0 1 .708 0L8 8.793l2.646-2.647a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E") no-repeat right 10px center;
+        background-size: 1.5em;
+        padding-left: 1rem;
+      }
+      .version {
+        margin-top: 0.25rem;
+        font-size: 0.875rem;
+        color: #fff;
+        opacity: 0.8;
+        text-align: center;
+      }
+      .download-source {
+        margin-top: 2rem;
+      }
+      .download-source .button {
+        min-width: 255.5px;
       }
     </style>
   </head>
@@ -97,8 +136,23 @@
           <div id="version2" class="version">Loading…</div>
         </div>
         <div>
-          <a id="download3" class="button" href="#" download>Download Source</a>
-          <div id="version3" class="version">Loading…</div>
+          <select id="downloadType" class="button">
+            <option value="installer">Installer</option>
+            <option value="standalone">Standalone</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="download-source">
+        <div class="button-row">
+          <div class="button-column">
+            <a id="downloadSource" class="button" href="#" download>Download Browser Source</a>
+            <div id="versionSource" class="version">Loading…</div>
+          </div>
+          <div class="button-column">
+            <a id="downloadPrebuilt" class="button" href="#" download>Download Prebuilt WebKit</a>
+            <div id="versionPrebuilt" class="version">Loading…</div>
+          </div>
         </div>
       </div>
     </main>
@@ -107,11 +161,34 @@
       const assetsBase = "https://cryptidium.vercel.app/UpdateUtility/";
       const versionUrl1 = assetsBase + "lateststableformatted";
       const versionUrl2 = assetsBase + "latestbetaformatted";
-      const downloadUrl1 = assetsBase + "CryptidiumStable.exe";
-      const downloadUrl2 = assetsBase + "CryptidiumBeta.exe";
+      const downloadUrl1 = assetsBase + "Installer/CryptidiumStable.exe";
+      const downloadUrl2 = assetsBase + "Installer/CryptidiumBeta.exe";
+      const downloadUrl3 = assetsBase + "Standalone/CryptidiumStable.zip";
+      const downloadUrl4 = assetsBase + "Standalone/CryptidiumBeta.zip";
 
-      document.getElementById("download1").href = downloadUrl1;
-      document.getElementById("download2").href = downloadUrl2;
+      const repoOwner = "Cryptidium";
+      const repoName = "Cryptidium-Browser";
+      const branch = "main";
+      const sourceZipUrl = `https://github.com/${repoOwner}/${repoName}/archive/refs/heads/${branch}.zip`;
+
+      const prebuiltRepoOwner = "Cryptidium";
+      const prebuiltRepoName = "WebKit";
+      const prebuiltBranch = "main";
+      const prebuiltSourceUrl = `https://github.com/${prebuiltRepoOwner}/${prebuiltRepoName}/archive/refs/heads/${prebuiltBranch}.zip`;
+      const prebuiltReadmeUrl = `https://raw.githubusercontent.com/${prebuiltRepoOwner}/${prebuiltRepoName}/${prebuiltBranch}/README.md`;
+
+      function updateDownloadLinks() {
+        const type = document.getElementById("downloadType").value;
+        if (type === "installer") {
+          document.getElementById("download1").href = downloadUrl1;
+          document.getElementById("download2").href = downloadUrl2;
+        } else {
+          document.getElementById("download1").href = downloadUrl3;
+          document.getElementById("download2").href = downloadUrl4;
+        }
+      }
+      document.getElementById("downloadType").addEventListener("change", updateDownloadLinks);
+      updateDownloadLinks();
 
       async function fetchText(url, id) {
         try {
@@ -123,16 +200,8 @@
           document.getElementById(id).textContent = "Version unavailable";
         }
       }
-
       fetchText(versionUrl1, "version1");
       fetchText(versionUrl2, "version2");
-
-      const repoOwner = "Cryptidium";
-      const repoName = "Cryptidium-Browser";
-      const branch = "main";
-
-      const sourceZipUrl = `https://github.com/${repoOwner}/${repoName}/archive/refs/heads/${branch}.zip`;
-      document.getElementById("download3").href = sourceZipUrl;
 
       async function fetchLatestCommit(owner, repo) {
         try {
@@ -146,10 +215,25 @@
           return "Commit unavailable";
         }
       }
-
+      document.getElementById("downloadSource").href = sourceZipUrl;
       fetchLatestCommit(repoOwner, repoName).then(label => {
-        document.getElementById("version3").textContent = label;
+        document.getElementById("versionSource").textContent = label;
       });
+
+      async function fetchPrebuiltVersion() {
+        try {
+          const res = await fetch(prebuiltReadmeUrl, { cache: "no-store" });
+          if (!res.ok) throw new Error();
+          const text = await res.text();
+          const lines = text.split("\n");
+          const versionLine = lines[3] ? lines[3].trim() : "Version unavailable";
+          document.getElementById("versionPrebuilt").textContent = versionLine;
+        } catch {
+          document.getElementById("versionPrebuilt").textContent = "Version unavailable";
+        }
+      }
+      document.getElementById("downloadPrebuilt").href = prebuiltSourceUrl;
+      fetchPrebuiltVersion();
     </script>
   </body>
 </html>
