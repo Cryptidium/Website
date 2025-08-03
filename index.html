@@ -127,7 +127,7 @@
 
       <div class="button-row">
         <div>
-          <a id="download1" class="button" href="#" download>Download Stable</a>
+          <a id="download1" class="button" href="#">Download Stable</a>
           <div id="version1" class="version">Loading…</div>
         </div>
         <div>
@@ -157,90 +157,94 @@
     </main>
 
     <script>
-      const assetsBase = "https://cryptidium.vercel.app/UpdateUtility/";
-      const versionUrl1 = assetsBase + "lateststableformatted";
-      const versionUrl2 = assetsBase + "latestbetaformatted";
+  const assetsBase = "https://cryptidium.vercel.app/UpdateUtility/";
+  const versionUrl1 = assetsBase + "lateststableformatted";
+  const versionUrl2 = assetsBase + "latestbetaformatted";
 
-      const repoOwner = "Cryptidium";
-      const repoName = "Cryptidium-Browser";
-      const branch = "main";
+  const repoOwner = "Cryptidium";
+  const repoName = "Cryptidium-Browser";
+  const branch = "main";
 
-      async function getReleaseAssetUrl(owner, repo, assetFilter) {
-        try {
-          const apiUrl = `https://api.github.com/repos/${owner}/${repo}/releases/latest`;
-          const res = await fetch(apiUrl);
-          if (!res.ok) throw new Error();
-          const data = await res.json();
-          const asset = data.assets.find(asset => asset.name.includes(assetFilter));
-          return asset ? asset.browser_download_url : "#";
-        } catch {
-          return "#";
-        }
-      }
+  async function getPrereleaseAssetUrl(owner, repo, assetFilter) {
+    try {
+      const apiUrl = `https://api.github.com/repos/${owner}/${repo}/releases`;
+      const res = await fetch(apiUrl);
+      if (!res.ok) throw new Error();
+      const releases = await res.json();
+      // Filter only prereleases and sort descending by creation date
+      const prereleases = releases
+        .filter(release => release.prerelease)
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      if (!prereleases.length) return "#";
+      const asset = prereleases[0].assets.find(asset => asset.name.includes(assetFilter));
+      return asset ? asset.browser_download_url : "#";
+    } catch {
+      return "#";
+    }
+  }
 
-      async function updateDownloadLinks() {
-        const type = document.getElementById("downloadType").value;
-        if (type === "installer") {
-          const assetUrl = await getReleaseAssetUrl(repoOwner, repoName, ".exe");
-          document.getElementById("download1").href = assetUrl;
-          document.getElementById("download2").href = assetUrl;
-        } else {
-          const assetUrl = await getReleaseAssetUrl(repoOwner, repoName, ".zip");
-          document.getElementById("download1").href = assetUrl;
-          document.getElementById("download2").href = assetUrl;
-        }
-      }
-      document.getElementById("downloadType").addEventListener("change", updateDownloadLinks);
-      updateDownloadLinks();
+  async function updateDownloadLinks() {
+    const type = document.getElementById("downloadType").value;
+    let assetUrl;
+    if (type === "installer") {
+      assetUrl = await getPrereleaseAssetUrl(repoOwner, repoName, ".exe");
+    } else {
+      assetUrl = await getPrereleaseAssetUrl(repoOwner, repoName, ".zip");
+    }
+    document.getElementById("download1").href = assetUrl;
+    document.getElementById("download2").href = assetUrl;
+  }
+  document.getElementById("downloadType").addEventListener("change", updateDownloadLinks);
+  updateDownloadLinks();
 
-      async function fetchText(url, id) {
-        try {
-          const res = await fetch(url, { cache: "no-store" });
-          if (!res.ok) throw new Error();
-          const text = await res.text();
-          document.getElementById(id).textContent = text.trim();
-        } catch {
-          document.getElementById(id).textContent = "Version unavailable";
-        }
-      }
-      fetchText(versionUrl1, "version1");
-      fetchText(versionUrl2, "version2");
+  async function fetchText(url, id) {
+    try {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error();
+      const text = await res.text();
+      document.getElementById(id).textContent = text.trim();
+    } catch {
+      document.getElementById(id).textContent = "Version unavailable";
+    }
+  }
+  fetchText(versionUrl1, "version1");
+  fetchText(versionUrl2, "version2");
 
-      async function fetchLatestCommit(owner, repo) {
-        try {
-          const apiUrl = `https://api.github.com/repos/${owner}/${repo}/commits?per_page=1`;
-          const res = await fetch(apiUrl, { headers: { "Accept": "application/vnd.github.v3+json" } });
-          if (!res.ok) throw new Error();
-          const data = await res.json();
-          const sha = (data[0]?.sha || "").substring(0, 7);
-          return sha ? `commit ${sha}` : "Unknown commit";
-        } catch {
-          return "Commit unavailable";
-        }
-      }
-      document.getElementById("downloadSource").href = `https://github.com/${repoOwner}/${repoName}/archive/refs/heads/${branch}.zip`;
-      fetchLatestCommit(repoOwner, repoName).then(label => {
-        document.getElementById("versionSource").textContent = label;
-      });
+  async function fetchLatestCommit(owner, repo) {
+    try {
+      const apiUrl = `https://api.github.com/repos/${owner}/${repo}/commits?per_page=1`;
+      const res = await fetch(apiUrl, { headers: { "Accept": "application/vnd.github.v3+json" } });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      const sha = (data[0]?.sha || "").substring(0, 7);
+      return sha ? `commit ${sha}` : "Unknown commit";
+    } catch {
+      return "Commit unavailable";
+    }
+  }
+  document.getElementById("downloadSource").href = `https://github.com/${repoOwner}/${repoName}/archive/refs/heads/${branch}.zip`;
+  fetchLatestCommit(repoOwner, repoName).then(label => {
+    document.getElementById("versionSource").textContent = label;
+  });
 
-      async function fetchPrebuiltVersion() {
-        try {
-          const prebuiltRepoOwner = "Cryptidium";
-          const prebuiltRepoName = "WebKit";
-          const prebuiltBranch = "main";
-          const prebuiltReadmeUrl = `https://raw.githubusercontent.com/${prebuiltRepoOwner}/${prebuiltRepoName}/${prebuiltBranch}/README.md`;
-          const res = await fetch(prebuiltReadmeUrl, { cache: "no-store" });
-          if (!res.ok) throw new Error();
-          const text = await res.text();
-          const lines = text.split("\n");
-          const versionLine = lines[3] ? lines[3].trim() : "Version unavailable";
-          document.getElementById("versionPrebuilt").textContent = versionLine;
-        } catch {
-          document.getElementById("versionPrebuilt").textContent = "Version unavailable";
-        }
-      }
-      document.getElementById("downloadPrebuilt").href = `https://github.com/Cryptidium/WebKit/archive/refs/heads/main.zip`;
-      fetchPrebuiltVersion();
-    </script>
+  async function fetchPrebuiltVersion() {
+    try {
+      const prebuiltRepoOwner = "Cryptidium";
+      const prebuiltRepoName = "WebKit";
+      const prebuiltBranch = "main";
+      const prebuiltReadmeUrl = `https://raw.githubusercontent.com/${prebuiltRepoOwner}/${prebuiltRepoName}/${prebuiltBranch}/README.md`;
+      const res = await fetch(prebuiltReadmeUrl, { cache: "no-store" });
+      if (!res.ok) throw new Error();
+      const text = await res.text();
+      const lines = text.split("\n");
+      const versionLine = lines[3] ? lines[3].trim() : "Version unavailable";
+      document.getElementById("versionPrebuilt").textContent = versionLine;
+    } catch {
+      document.getElementById("versionPrebuilt").textContent = "Version unavailable";
+    }
+  }
+  document.getElementById("downloadPrebuilt").href = `https://github.com/Cryptidium/WebKit/archive/refs/heads/main.zip`;
+  fetchPrebuiltVersion();
+</script>
   </body>
 </html>
