@@ -160,30 +160,34 @@
       const assetsBase = "https://cryptidium.vercel.app/UpdateUtility/";
       const versionUrl1 = assetsBase + "lateststableformatted";
       const versionUrl2 = assetsBase + "latestbetaformatted";
-      const downloadUrl1 = assetsBase + "Standalone/CryptidiumBeta.exe";
-      const downloadUrl2 = assetsBase + "Standalone/CryptidiumBeta.exe";
-      const downloadUrl3 = assetsBase + "Portable/CryptidiumBeta.zip";
-      const downloadUrl4 = assetsBase + "Portable/CryptidiumBeta.zip";
 
       const repoOwner = "Cryptidium";
       const repoName = "Cryptidium-Browser";
       const branch = "main";
-      const sourceZipUrl = `https://github.com/${repoOwner}/${repoName}/archive/refs/heads/${branch}.zip`;
 
-      const prebuiltRepoOwner = "Cryptidium";
-      const prebuiltRepoName = "WebKit";
-      const prebuiltBranch = "main";
-      const prebuiltSourceUrl = `https://github.com/${prebuiltRepoOwner}/${prebuiltRepoName}/archive/refs/heads/${prebuiltBranch}.zip`;
-      const prebuiltReadmeUrl = `https://raw.githubusercontent.com/${prebuiltRepoOwner}/${prebuiltRepoName}/${prebuiltBranch}/README.md`;
+      async function getReleaseAssetUrl(owner, repo, assetFilter) {
+        try {
+          const apiUrl = `https://api.github.com/repos/${owner}/${repo}/releases/latest`;
+          const res = await fetch(apiUrl);
+          if (!res.ok) throw new Error();
+          const data = await res.json();
+          const asset = data.assets.find(asset => asset.name.includes(assetFilter));
+          return asset ? asset.browser_download_url : "#";
+        } catch {
+          return "#";
+        }
+      }
 
-      function updateDownloadLinks() {
+      async function updateDownloadLinks() {
         const type = document.getElementById("downloadType").value;
         if (type === "installer") {
-          document.getElementById("download1").href = downloadUrl1;
-          document.getElementById("download2").href = downloadUrl2;
+          const assetUrl = await getReleaseAssetUrl(repoOwner, repoName, ".exe");
+          document.getElementById("download1").href = assetUrl;
+          document.getElementById("download2").href = assetUrl;
         } else {
-          document.getElementById("download1").href = downloadUrl3;
-          document.getElementById("download2").href = downloadUrl4;
+          const assetUrl = await getReleaseAssetUrl(repoOwner, repoName, ".zip");
+          document.getElementById("download1").href = assetUrl;
+          document.getElementById("download2").href = assetUrl;
         }
       }
       document.getElementById("downloadType").addEventListener("change", updateDownloadLinks);
@@ -214,13 +218,17 @@
           return "Commit unavailable";
         }
       }
-      document.getElementById("downloadSource").href = sourceZipUrl;
+      document.getElementById("downloadSource").href = `https://github.com/${repoOwner}/${repoName}/archive/refs/heads/${branch}.zip`;
       fetchLatestCommit(repoOwner, repoName).then(label => {
         document.getElementById("versionSource").textContent = label;
       });
 
       async function fetchPrebuiltVersion() {
         try {
+          const prebuiltRepoOwner = "Cryptidium";
+          const prebuiltRepoName = "WebKit";
+          const prebuiltBranch = "main";
+          const prebuiltReadmeUrl = `https://raw.githubusercontent.com/${prebuiltRepoOwner}/${prebuiltRepoName}/${prebuiltBranch}/README.md`;
           const res = await fetch(prebuiltReadmeUrl, { cache: "no-store" });
           if (!res.ok) throw new Error();
           const text = await res.text();
@@ -231,7 +239,7 @@
           document.getElementById("versionPrebuilt").textContent = "Version unavailable";
         }
       }
-      document.getElementById("downloadPrebuilt").href = prebuiltSourceUrl;
+      document.getElementById("downloadPrebuilt").href = `https://github.com/Cryptidium/WebKit/archive/refs/heads/main.zip`;
       fetchPrebuiltVersion();
     </script>
   </body>
